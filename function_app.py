@@ -12,6 +12,9 @@ from adlfs import AzureBlobFileSystem
 # Path to the local.settings.json file
 settings_file_path = 'local.settings.json'
 
+'''
+In case it's locally tested
+'''
 # Check if the file exists and read it
 # if os.path.exists(settings_file_path):
 #     with open(settings_file_path, 'r') as file:
