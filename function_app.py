@@ -13,12 +13,16 @@ from adlfs import AzureBlobFileSystem
 settings_file_path = 'local.settings.json'
 
 # Check if the file exists and read it
-if os.path.exists(settings_file_path):
-    with open(settings_file_path, 'r') as file:
-        settings = json.load(file)
-        account_name = settings['Values']['STORAGE_ACCOUNT_NAME']
-        account_key = settings['Values']['STORAGE_ACCOUNT_KEY']
-        database_password = settings['Values']['DATABASE_PASSWORD']
+# if os.path.exists(settings_file_path):
+#     with open(settings_file_path, 'r') as file:
+#         settings = json.load(file)
+#         account_name = settings['Values']['STORAGE_ACCOUNT_NAME']
+#         account_key = settings['Values']['STORAGE_ACCOUNT_KEY']
+#         database_password = settings['Values']['DATABASE_PASSWORD']
+
+account_name = os.environ.get('STORAGE_ACCOUNT_NAME', 'default_account_name')
+account_key = os.environ.get('STORAGE_ACCOUNT_KEY', 'default_account_key')
+database_password = os.environ.get('DATABASE_PASSWORD', 'default_password')
 
 file_system = AzureBlobFileSystem(account_name=account_name, account_key=account_key)
 
