@@ -5,13 +5,20 @@ import io
 import hashlib
 import pyodbc
 import os
+import json
 
 from adlfs import AzureBlobFileSystem
 
-# Initialize AzureBlobFileSystem with your Azure storage account details
-account_name = os.environ.get('STORAGE_ACCOUNT_NAME', 'default_account_name')
-account_key = ('STORAGE_ACCOUNT_KEY', 'default_account_key')
-database_password = os.environ.get('DATABASE_PASSWORD', 'default_password')
+# Path to the local.settings.json file
+settings_file_path = 'local.settings.json'
+
+# Check if the file exists and read it
+if os.path.exists(settings_file_path):
+    with open(settings_file_path, 'r') as file:
+        settings = json.load(file)
+        account_name = settings['Values']['STORAGE_ACCOUNT_NAME']
+        account_key = settings['Values']['STORAGE_ACCOUNT_KEY']
+        database_password = settings['Values']['DATABASE_PASSWORD']
 
 file_system = AzureBlobFileSystem(account_name=account_name, account_key=account_key)
 
@@ -19,7 +26,7 @@ file_system = AzureBlobFileSystem(account_name=account_name, account_key=account
 DATABASE_URL = f"jdbc:sqlserver://cco-anonym.database.windows.net:1433;database=cco;user=CloudSA87b4a913@cco-anonym;password={database_password};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
 
 # Establish a database connection
-cnxn = pyodbc.connect('Driver={ODBC Driver 18 for SQL Server};Server=tcp:cco-anonym.database.windows.net,1433;Database=cco;Uid=CloudSA87b4a913;Pwd=Jsdngasas123;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;')
+cnxn = pyodbc.connect(f"Driver={{ODBC Driver 18 for SQL Server}};Server=tcp:cco-anonym.database.windows.net,1433;Database=cco;Uid=CloudSA87b4a913;Pwd={database_password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;")
 cursor = cnxn.cursor()
 
 app = func.FunctionApp()
